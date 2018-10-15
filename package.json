@@ -1,0 +1,11 @@
+{
+  "name": "tutsplus-editor-workflow",
+  "version": "1.0.0",
+  "description": "Workflow tools for a Tuts+ editor",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Adam Brown",
+  "license": "BSD-2-Clause"
+}
