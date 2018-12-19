@@ -9,6 +9,7 @@
   "author": "Adam Brown",
   "license": "BSD-2-Clause",
   "dependencies": {
+    "dateformat": "^3.0.3",
     "papaparse": "^4.6.1"
   }
 }
