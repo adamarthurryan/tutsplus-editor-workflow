@@ -2,14 +2,29 @@
   "name": "tutsplus-editor-workflow",
   "version": "1.0.0",
   "description": "Workflow tools for a Tuts+ editor",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "author": "Adam Brown",
   "license": "BSD-2-Clause",
   "dependencies": {
     "dateformat": "^3.0.3",
-    "papaparse": "^4.6.1"
-  }
+    "papaparse": "^4.6.1",
+    "rc-upload": "^2.6.1",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
+    "react-scripts": "2.1.2"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
