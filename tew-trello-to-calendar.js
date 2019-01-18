@@ -1,5 +1,5 @@
 const Papa = require("papaparse")
-const ingest = require('./trelloCsvIngest')
+const ingest = require('./backend/trelloCsvIngest')
 
 // Ingest the exported trello board data and format it for copying to code editorial calendar
 async function run() {

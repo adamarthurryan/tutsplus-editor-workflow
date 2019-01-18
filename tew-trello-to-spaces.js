@@ -1,8 +1,8 @@
 const fs = require('fs')
 const Papa = require("papaparse")
-const trelloIngest = require('./trelloCsvIngest')
-const spacesIngest = require('./spacesCsvIngest')
-const keywordsIngest = require('./keywordsCsvIngest')
+const trelloIngest = require('./backend/trelloCsvIngest')
+const spacesIngest = require('./backend/spacesCsvIngest')
+const keywordsIngest = require('./backend/keywordsCsvIngest')
 
 // Ingest the exported trello board data and format it for copying to code editorial calendar
 
