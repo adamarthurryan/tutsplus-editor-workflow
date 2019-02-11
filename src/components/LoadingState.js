@@ -13,14 +13,19 @@ class LoadingState extends Component {
 
     render() {
       const loadingStringRender = (loader) =>
-        ((loader.status === STATE_LOADING || loader.status === STATE_DONE)? ` ${loader.loaded}` : "") 
+        ((loader.status === STATE_LOADING || loader.status === STATE_DONE)? ` loaded` : "") 
         + ((loader.status === STATE_ERROR) ? `error` : "") 
         + ((loader.status === STATE_EMPTY) ? 'empty' : '')
 
 
     	return (
-          <div className="ui section float right">
-            <p>Cards: {loadingStringRender(this.props.cardsLoader)}</p>
+          <div className="ui section">
+            <p>
+                <span>Cards: {loadingStringRender(this.props.cardsLoader)}</span><span>, </span>
+                <span>Posts: {loadingStringRender(this.props.postsLoader)}</span><span>, </span>
+                <span>Spaces: {loadingStringRender(this.props.spacesLoader)}</span><span>, </span>
+                <span>Keywords: {loadingStringRender(this.props.keywordsLoader)}</span>
+            </p>
           </div>
     	)
     }

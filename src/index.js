@@ -16,6 +16,9 @@ import {connect} from 'react-redux'
 import * as reducers from './reducers'
 import * as localStore from './util/localStore'
 
+import Actions from './actions'
+
+
 //create the redux store
 //initial state is retrieved from localStore
 const store = Redux.createStore(
@@ -37,11 +40,20 @@ store.subscribe(saveState)
 //create a root component and give it access to state and actions
 const mapStateToProps = (state) => ({
 })
+
 const mapDispatchToProps = (dispatch) => ({
+  startLoadingCards: () => dispatch(Actions.startLoadingCards()),
+  startLoadingPosts: () => dispatch(Actions.startLoadingPosts()),
+  startLoadingSpaces: () => dispatch(Actions.startLoadingSpaces()),
+  startLoadingKeywords: () => dispatch(Actions.startLoadingKeywords())
 })
 
 class Root extends Component {
   componentWillMount() {
+    this.props.startLoadingPosts()
+    this.props.startLoadingCards()
+    this.props.startLoadingSpaces()
+    this.props.startLoadingKeywords()
   }
 
   render() {

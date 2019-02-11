@@ -1,14 +1,16 @@
 const fs = require('fs')
 const Papa = require("papaparse")
-const trelloIngest = require('./backend/trelloCsvIngest')
-const spacesIngest = require('./backend/spacesCsvIngest')
-const keywordsIngest = require('./backend/keywordsCsvIngest')
+const trelloProcess = require('./backend/processTrelloCsv')
+const spacesProcess = require('./backend/processSpacesCsv')
+const keywordsProcess = require('./backend/processKeywordsCsv')
+const postsProcess = require('./backend/processTutsPostsCsv')
+const csvIngest = require('./backend/csvIngest')
 
 // Ingest the exported trello board data and format it for copying to code editorial calendar
 
 const SPACES_DATABASE="./data/spaces.csv"
 const KEYWORDS_DATABASE="./data/keywords.csv"
-
+const POSTS_DATABASE="./data/cm-posts.csv"
 
 
 const collect = (collection, key, value) => collection[key] ? collection[key].push(value) : collection[key] = [value]  
@@ -21,20 +23,26 @@ const groupBy = (list, fieldName) => list.reduce( (acc,item) => {
 async function run() {
 	let spaces = {}
 	let keywords = []
+	let posts = []
 
 	if (fs.existsSync(SPACES_DATABASE)) {
 		const dataFileStream = fs.createReadStream(SPACES_DATABASE)
-		spaces = await spacesIngest(dataFileStream)
+		spaces = await csvIngest(dataFileStream, spacesProcess, {})
 	}
 	if (fs.existsSync(KEYWORDS_DATABASE)) {
 		const dataFileStream = fs.createReadStream(KEYWORDS_DATABASE)
-		keywords = await keywordsIngest(dataFileStream)
+		keywords = await csvIngest(dataFileStream, keywordsProcess, [])
+	}
+	if (fs.existsSync(POSTS_DATABASE)) {
+		const dataFileStream = fs.createReadStream(POSTS_DATABASE)
+		posts = await csvIngest(dataFileStream, postsProcess, [])
 	}
 
-	let cards = await trelloIngest(process.stdin)
+	let cards = await csvIngest(process.stdin, trelloProcess, [])
 	cards = processCards(cards, spaces, keywords)
 
 	const cardsBySpaces = groupBy(cards, "contentSpace")
+
 
 	//merge spaces from cards into spaces list
 	Object.keys(cardsBySpaces).forEach(cardSpace => !spaces[cardSpace] ? spaces[cardSpace] = {space:cardSpace, category:"Unknown"}: null ) 
@@ -55,7 +63,7 @@ async function run() {
 			keywords.push({space:card.contentSpace, keyword:card.primaryKeyword, cards:[card] })
 	})
 
-	const rows = createRows(cards, spaces, keywords)
+	const rows = createRows(cards, spaces, keywords, posts)
 
 	const outputCSV = Papa.unparse(rows)
 	console.log(outputCSV)
@@ -78,10 +86,11 @@ const SPACES_LISTS = [
 
 const LABEL_README = "Readme"
 
-function createRows(cards, spaces, keywords) {
+function createRows(cards, spaces, keywords, posts) {
 	//now output results
-	let spacesByCategory=groupBy(Object.values(spaces), "category")
-	let keywordsBySpaces=groupBy(keywords, "space")
+	const spacesByCategory=groupBy(Object.values(spaces), "category")
+	const keywordsBySpaces=groupBy(keywords, "space")
+	const postsBySpaces = groupBy(posts, "space")
 
 	let rows = []
 	Object.keys(spacesByCategory).forEach(category=> {
@@ -98,6 +107,12 @@ function createRows(cards, spaces, keywords) {
 						keywordItem.cards.forEach(card => {
 							rows.push(formatKeywordForSpacesDashboard(keywordItem, card))
 						})
+				})
+			}
+
+			if (postsBySpaces[spaceItem.space]) {
+				postsBySpaces[spaceItem.space].forEach(post => {
+					rows.push(formatPostForSpacesDashboard(post))
 				})
 			}
 		})
@@ -125,22 +140,12 @@ function processCards (cards, spaces, keywords) {
 }
 
 
-function formatAndOutput(cards, spaces, keywords) {
-	//merge the spaces from the "official" spaces list and the trello board
-	//merge the keywords from the official list and the trello board 
-
-	//nead meta-headings: PHP Scripts, etc
-	
-	//for each space, output the header
-	//then iterate key
-
-}
 
 /*
 	Market/Elements Category, Content Space, Approach, Keyword, Vol, Diff, Existing, Content Ideas / Notes, Format, Progress
 */
 
-const EMPTY_ROW = {"Market/Elements Category":"", "Content Space":"", "Approach":"", "Keyword":"", "Vol":"", "Diff":"", "Existing":"", "Title":"", "Format":"", "Progress":"", "Trello":""} 
+const EMPTY_ROW = {"Market/Elements Category":"", "Content Space":"", "Approach":"", "Keyword":"", "Vol":"", "Diff":"", "Existing":"", "Title":"", "Date Updated":"", "Format":"", "Progress":"", "Trello":""} 
 function formatCategoryForSpacesDashboard(category) {
 	return Object.assign({}, EMPTY_ROW, {"Market/Elements Category": category})
 }
@@ -148,9 +153,9 @@ function formatSpaceForSpacesDashboard(spaceItem) {
 	return Object.assign({}, EMPTY_ROW, {"Content Space":spaceItem.space, "Approach":spaceItem.approach})
 }
 function formatKeywordForSpacesDashboard(keywordItem, card=null) {
-	let row = Object.assign({}, EMPTY_ROW, {"Content Space":"", "Approach":"", Keyword:keywordItem.keyword, "Vol":keywordItem.vol, "Diff":keywordItem.diff}) 
+	let row = Object.assign({}, EMPTY_ROW, {"Keyword":keywordItem.keyword, "Vol":keywordItem.vol, "Diff":keywordItem.diff}) 
 	if (card) {
-		row = Object.assign({}, row, {"Existing":card.publishedUrl, "Title":card.title, "Format":card.postType, "Progress":card.list})
+		row = Object.assign({}, row, {"Existing":card.publishedUrl, "Title":card.title, "Date Updated":card.date, "Format":card.postType, "Progress":card.list})
 		//look up the index of this list if there is a list (otherwise use -1 for an index)
 		const cardListIndex = (card.list && SPACES_LISTS.includes(card.list.toLowerCase())) ? SPACES_LISTS.indexOf(card.list.toLowerCase()) : -1
 		//add the trello URL only if the card is not archived and is not scheduled
@@ -158,4 +163,7 @@ function formatKeywordForSpacesDashboard(keywordItem, card=null) {
 			row = Object.assign({}, row, { "Trello":card.cardUrl})
 	}
 	return row
+}
+function formatPostForSpacesDashboard(post) {
+	return Object.assign({}, EMPTY_ROW, {"Existing": post.url, "Title":post.title, "Date Updated":post.publication_date, "Progress":"Scheduled"})
 }
