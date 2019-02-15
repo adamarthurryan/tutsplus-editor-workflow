@@ -32,9 +32,13 @@ class Spaces extends PureComponent {
 			{Object.keys(spacesByCategory).map(category => 
 				<div>
 					<h2 key={category}>{category}</h2>
-					{spacesByCategory[category].map(spaceItem => 
-						<p key={spaceItem.space}><Link to={`spaces/${slug(spaceItem.space.toLowerCase())}`}>{spaceItem.space}</Link>: {spaceItem.approach}</p>
-					)}
+					<table>
+					{spacesByCategory[category].map(spaceItem =>
+						<tr> 
+							<td key={spaceItem.space}><Link to={`spaces/${slug(spaceItem.space.toLowerCase())}`}>{spaceItem.space}</Link></td><td> {spaceItem.approach}</td>
+						</tr>
+						)}
+					</table>
 				</div> 
 			)}
 		</div>

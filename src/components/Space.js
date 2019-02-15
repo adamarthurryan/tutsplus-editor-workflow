@@ -35,30 +35,48 @@ class Space extends PureComponent {
 
 		console.log(keywords)
 
-        return <CopyToClipboard>
+        return <div>
 			{space
 				? <div>
-					<h2>{space.space}</h2>
-					<h3>Related Content:</h3>
-					<ul>
-						{keywords.map(keywordItem => (
-							keywordItem.posts.map(post =>
-								<li><a href={post.url} rel="noopener noreferrer" target="_blank">{post.title}</a></li>
-							)
-						))}
-					</ul>
-					<h3>Keywords:</h3>
-					<ul>
-						{keywords.map(keywordItem => (
-							<li>{keywordItem.keyword} {keywordItem.vol} {keywordItem.diff}</li>
-						))}
-					</ul>
+					<CopyToClipboard label="Copy for Trello">
+						<div style={{marginTop:"-10000px", position:"absolute"}}>
+							<p>## Related Content:</p>
+							{keywords.map(keywordItem => (
+								keywordItem.posts.map(post => (
+									<div> - [{post.title}]({post.url})<br/></div>
+								))
+							))}
+							<p>&nbsp;</p>
+							<p>## Keywords:</p>
+								{keywords.map(keywordItem => (
+									<div> - {keywordItem.keyword} / {keywordItem.vol} / {keywordItem.diff}<br/></div>
+								))}
 
+						</div>
+					</CopyToClipboard>
+						<div>
+							<h3>Related Content:</h3>
+							<ul>
+								{keywords.map(keywordItem => (
+									keywordItem.posts.map(post => (
+										<li><a href={post.url} target="_blank" rel="noopener noreferrer">{post.title}</a></li>
+									))
+								))}
+							</ul>
+							<h3>Keywords:</h3>
+							<table>
+								{keywords.map(keywordItem => (
+									<tr>
+										<td>{keywordItem.keyword}</td><td>{keywordItem.vol}</td><td>{keywordItem.diff}</td>
+									</tr>
+								))}
+							</table>
+
+						</div>
 				</div>
 				: <h2>Not Found</h2>
 			}
-			
-		</CopyToClipboard>
+		</div>			
     	
     }
 }
