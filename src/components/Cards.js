@@ -20,49 +20,35 @@ const mapStateToProps = state =>
 const mapDispatchToProps = dispatch => ({
 })
 
-class Spaces extends PureComponent {
+class Cards extends PureComponent {
 
 
     render() {
         //this is not the right place to do data processing?
 
 		const columns=[
-			{Header: "Category", accessor:"category", minWidth: 150},
-			{Header: "Space", accessor:"space", minWidth: 150,
-				Cell: (props) => <Link to={`spaces/${slug(props.value.toLowerCase())}`}>{props.value}</Link>
+			{Header: "Space", accessor:"contentSpace"
+//				Cell: (props) => <Link to={`spaces/${slug(props.value.toLowerCase())}`}>{props.value}</Link>
 			},
-			{Header: "Approach", accessor:"approach"}
+            {Header: "Title", accessor:"title"},
+            {Header: "Status", accessor:"list"}
 		]
 
 		const database = createSpacesDatabase(this.props.cards, this.props.spaces, this.props.keywords, this.props.posts)
 		//const spacesByCategory=groupBy(Object.values(database.spaces), "category")
 		
         return <TreeTable
-			data={database.spaces}
+			data={database.cards}
 			columns={columns}
 			filtered
 			resizable={false}
-			pivotBy={["category"]}
+			pivotBy={["contentSpace"]}
 			expanded={Array.from("01234567890123456789").map(() => true)}
 			/>
 		
-		/*<div>
-			{Object.keys(spacesByCategory).map(category => 
-				<div>
-					<h2 key={category}>{category}</h2>
-					<table>
-					{spacesByCategory[category].map(spaceItem =>
-						<tr> 
-							<td key={spaceItem.space}><Link to={`spaces/${slug(spaceItem.space.toLowerCase())}`}>{spaceItem.space}</Link></td><td> {spaceItem.approach}</td>
-						</tr>
-						)}
-					</table>
-				</div> 
-			)}
-		</div>
-    	*/
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Spaces)
+export default connect(mapStateToProps, mapDispatchToProps)(Cards)
+
 

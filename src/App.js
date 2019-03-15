@@ -9,7 +9,7 @@ import EditorialCalendar from './components/EditorialCalendar'
 import SpacesDashboard from './components/SpacesDashboard'
 import Spaces  from './components/Spaces'
 import Space from './components/Space'
-import CardsTable from './components/Cards'
+import Cards from './components/Cards'
 
 import {NavLink, Switch, Route} from 'react-router-dom'
 
@@ -43,7 +43,7 @@ class App extends Component {
             <Route path="/spaces-dashboard" component={SpacesDashboard}/>
             <Route path="/spaces/:spaceSlug" component={Space}/>
             <Route path="/spaces" component={Spaces}/>
-            <Route path="/cards" component={CardsTable}/>
+            <Route path="/cards" component={Cards}/>
             <Route path="/debug" component={Debug}/>
         </Switch>
         </div>

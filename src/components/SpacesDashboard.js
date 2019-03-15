@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react';
 import {connect} from 'react-redux'
 import * as Actions from '../actions'
-import groupBy from 'lodash.groupBy'
+import groupBy from 'lodash.groupby'
 import memoizeOne from 'memoize-one'
 import createSpacesDatabase from '../data/spacesDatabase'
 
