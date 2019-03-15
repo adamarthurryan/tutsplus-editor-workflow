@@ -1,14 +1,11 @@
 
 import React, { PureComponent } from 'react';
 import {connect} from 'react-redux'
-import * as Actions from '../actions'
-import groupBy from '../util/groupBy'
 import indexBy from '../util/indexBy'
 import memoizeOne from 'memoize-one'
 import createSpacesDatabase from '../data/spacesDatabase'
 import slug from 'slug'
 
-import CsvTable from './CsvTable'
 import CopyToClipboard from './CopyToClipboard'
 
 const mapStateToProps = state => 

@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 
 import './App.css'
 
-import LoadingState from './components/LoadingState'
 import TrelloCsvUpload from './components/TrelloCsvUpload'
 import Debug from './components/Debug'
 
@@ -10,6 +9,7 @@ import EditorialCalendar from './components/EditorialCalendar'
 import SpacesDashboard from './components/SpacesDashboard'
 import Spaces  from './components/Spaces'
 import Space from './components/Space'
+import CardsTable from './components/Cards'
 
 import {NavLink, Switch, Route} from 'react-router-dom'
 
@@ -32,6 +32,7 @@ class App extends Component {
         </div>
         <div className="ui top attached secondary pointing menu">
           <NavLink className="item" activeClassName="active" to="/spaces">Spaces</NavLink>
+          <NavLink className="item" activeClassName="active" to="/cards">Cards</NavLink>
           <NavLink className="item" activeClassName="active" to="/editorial-calendar">Editorial Calendar</NavLink>
           <NavLink className="item" activeClassName="active" to="/spaces-dashboard">Spaces Dashboard</NavLink>
         </div>
@@ -42,6 +43,7 @@ class App extends Component {
             <Route path="/spaces-dashboard" component={SpacesDashboard}/>
             <Route path="/spaces/:spaceSlug" component={Space}/>
             <Route path="/spaces" component={Spaces}/>
+            <Route path="/cards" component={CardsTable}/>
             <Route path="/debug" component={Debug}/>
         </Switch>
         </div>

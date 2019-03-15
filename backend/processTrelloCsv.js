@@ -32,7 +32,7 @@ module.exports = function processRow (row, cards)  {
 	else
 		labels = []
 
-	if (date && date != "null")
+	if (date && date !== "null")
 		date = dateFormat(Date.parse(date), "yyyy-mm-dd")
 	else
 		date = ""

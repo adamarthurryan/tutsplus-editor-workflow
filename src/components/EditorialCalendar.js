@@ -1,11 +1,10 @@
 
 import React, { PureComponent } from 'react';
 import {connect} from 'react-redux'
-import * as Actions from '../actions'
 import memoizeOne from 'memoize-one'
 
 import CsvTable from './CsvTable'
-import CopyToClipboard from './CopyToClipboard'
+import CopyToClipboard from '@adamarthurryan/react-copy-to-clipboard'
 
 const mapStateToProps = state => 
   Object.assign(
