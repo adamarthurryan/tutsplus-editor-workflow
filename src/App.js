@@ -10,6 +10,7 @@ import SpacesDashboard from './components/SpacesDashboard'
 import Spaces  from './components/Spaces'
 import Space from './components/Space'
 import Cards from './components/Cards'
+import Posts from './components/Posts'
 
 import {NavLink, Switch, Route} from 'react-router-dom'
 
@@ -33,6 +34,7 @@ class App extends Component {
         <div className="ui top attached secondary pointing menu">
           <NavLink className="item" activeClassName="active" to="/spaces">Spaces</NavLink>
           <NavLink className="item" activeClassName="active" to="/cards">Cards</NavLink>
+          <NavLink className="item" activeClassName="active" to="/posts">Posts</NavLink>
           <NavLink className="item" activeClassName="active" to="/editorial-calendar">Editorial Calendar</NavLink>
           <NavLink className="item" activeClassName="active" to="/spaces-dashboard">Spaces Dashboard</NavLink>
         </div>
@@ -44,6 +46,7 @@ class App extends Component {
             <Route path="/spaces/:spaceSlug" component={Space}/>
             <Route path="/spaces" component={Spaces}/>
             <Route path="/cards" component={Cards}/>
+            <Route path="/posts" component={Posts}/>
             <Route path="/debug" component={Debug}/>
         </Switch>
         </div>

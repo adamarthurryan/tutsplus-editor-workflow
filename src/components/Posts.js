@@ -20,49 +20,39 @@ const mapStateToProps = state =>
 const mapDispatchToProps = dispatch => ({
 })
 
-class Spaces extends PureComponent {
+class Posts extends PureComponent {
 
 
     render() {
         //this is not the right place to do data processing?
+	//	const fields = ["space","primary_keyword","format","title","publication_date","author","url","primary_topic","primary_category","teaser","market_links"]
 
 		const columns=[
-			{Header: "Category", accessor:"category", minWidth: 150},
-			{Header: "Space", accessor:"space", minWidth: 150,
-				Cell: (props) => <Link to={`spaces/${slug(props.value.toLowerCase())}`}>{props.value}</Link>
+			{Header: "Space", accessor:"space"
+//				Cell: (props) => <Link to={`spaces/${slug(props.value.toLowerCase())}`}>{props.value}</Link>
 			},
-			{Header: "Approach", accessor:"approach"}
+            {Header: "Title", accessor:"title", minWidth:250},
+        	{Header: "Author", accessor:"author"},
+            {Header: "Pub Date", accessor:"publication_date"},
 		]
 
 		const database = createSpacesDatabase(this.props.cards, this.props.spaces, this.props.keywords, this.props.posts)
 		//const spacesByCategory=groupBy(Object.values(database.spaces), "category")
 		
+		console.log(database.posts)
+
         return <TreeTable
-			data={database.spaces}
+			data={database.posts}
 			columns={columns}
 			filterable
 			resizable={false}
-			pivotBy={["category"]}
+			pivotBy={["space"]}
 			expanded={Array.from("01234567890123456789").map(() => true)}
 			/>
 		
-		/*<div>
-			{Object.keys(spacesByCategory).map(category => 
-				<div>
-					<h2 key={category}>{category}</h2>
-					<table>
-					{spacesByCategory[category].map(spaceItem =>
-						<tr> 
-							<td key={spaceItem.space}><Link to={`spaces/${slug(spaceItem.space.toLowerCase())}`}>{spaceItem.space}</Link></td><td> {spaceItem.approach}</td>
-						</tr>
-						)}
-					</table>
-				</div> 
-			)}
-		</div>
-    	*/
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Spaces)
+export default connect(mapStateToProps, mapDispatchToProps)(Posts)
+
 

@@ -6,7 +6,7 @@ import memoizeOne from 'memoize-one'
 import createSpacesDatabase from '../data/spacesDatabase'
 import slug from 'slug'
 
-import CopyToClipboard from './CopyToClipboard'
+import CopyToClipboard from '@adamarthurryan/react-copy-to-clipboard'
 
 const mapStateToProps = state => 
   Object.assign(

@@ -30,8 +30,14 @@ class Cards extends PureComponent {
 			{Header: "Space", accessor:"contentSpace"
 //				Cell: (props) => <Link to={`spaces/${slug(props.value.toLowerCase())}`}>{props.value}</Link>
 			},
-            {Header: "Title", accessor:"title"},
-            {Header: "Status", accessor:"list"}
+            {Header: "Title", accessor:"title", minWidth:250},
+            {Header: "Status", accessor:"list", 
+//            	Filter: (props) => ...
+        	},
+        	{Header: "Type", accessor:"postType"},
+        	{Header: "Author", accessor:"authors"},
+            {Header: "Due Date", accessor:"date"},
+            {Header: "Is Update?", accessor:"isUpdate"}
 		]
 
 		const database = createSpacesDatabase(this.props.cards, this.props.spaces, this.props.keywords, this.props.posts)
@@ -40,7 +46,7 @@ class Cards extends PureComponent {
         return <TreeTable
 			data={database.cards}
 			columns={columns}
-			filtered
+			filterable
 			resizable={false}
 			pivotBy={["contentSpace"]}
 			expanded={Array.from("01234567890123456789").map(() => true)}
