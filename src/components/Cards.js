@@ -9,6 +9,9 @@ import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 import treeTableHOC from "react-table/lib/hoc/treeTable";
 
+import reactTableSubstringFilter from '../util/reactTableSubstringFilter'
+
+
 const TreeTable = treeTableHOC(ReactTable);
 
 
@@ -27,17 +30,17 @@ class Cards extends PureComponent {
         //this is not the right place to do data processing?
 
 		const columns=[
-			{Header: "Space", accessor:"contentSpace"
+			{Header: "Space", accessor:"contentSpace", filterMethod: reactTableSubstringFilter
 //				Cell: (props) => <Link to={`spaces/${slug(props.value.toLowerCase())}`}>{props.value}</Link>
 			},
-            {Header: "Title", accessor:"title", minWidth:250},
-            {Header: "Status", accessor:"list", 
+            {Header: "Title", accessor:"title", minWidth:250, filterMethod: reactTableSubstringFilter},
+            {Header: "Status", accessor:"list", filterMethod: reactTableSubstringFilter 
 //            	Filter: (props) => ...
         	},
-        	{Header: "Type", accessor:"postType"},
-        	{Header: "Author", accessor:"authors"},
+        	{Header: "Type", accessor:"postType", filterMethod: reactTableSubstringFilter},
+        	{Header: "Author", accessor:"authors", filterMethod: reactTableSubstringFilter},
             {Header: "Due Date", accessor:"date"},
-            {Header: "Is Update?", accessor:"isUpdate"}
+            {Header: "Is Update?", id:"isUpdate", accessor:(data => data.isUpdate ? "yes" :"" )}
 		]
 
 		const database = createSpacesDatabase(this.props.cards, this.props.spaces, this.props.keywords, this.props.posts)
@@ -48,7 +51,7 @@ class Cards extends PureComponent {
 			columns={columns}
 			filterable
 			resizable={false}
-			pivotBy={["contentSpace"]}
+/*			pivotBy={["contentSpace"]}*/
 			expanded={Array.from("01234567890123456789").map(() => true)}
 			/>
 		

@@ -56,7 +56,7 @@ class Space extends PureComponent {
 							<ul>
 								{keywords.map(keywordItem => (
 									keywordItem.posts.map(post => (
-										<li><a href={post.url} target="_blank" rel="noopener noreferrer">{post.title}</a></li>
+										<li><a href={post.url} target="_blank" rel="noopener noreferrer">{post.title}</a> {post.publication_date}</li>
 									))
 								))}
 							</ul>
