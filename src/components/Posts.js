@@ -35,6 +35,7 @@ class Posts extends PureComponent {
 //				Cell: (props) => <Link to={`spaces/${slug(props.value.toLowerCase())}`}>{props.value}</Link>
 			},
             {Header: "Title", accessor:"title", minWidth:250, filterMethod: reactTableSubstringFilter},
+            {Header: "URL", accessor:"url", minWidth:50},
         	{Header: "Author", accessor:"author", filterMethod: reactTableSubstringFilter},
             {Header: "Pub Date", accessor:"publication_date"},
             {Header: "Is Update?", id:'is_update', accessor:(data => data.is_update ? "yes" :"" )}
