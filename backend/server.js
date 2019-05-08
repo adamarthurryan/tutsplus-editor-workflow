@@ -17,6 +17,8 @@ const multer = require('multer')
 let upload = multer()
 
 const trelloProcess = require('./processTrelloCsv')
+const tableauProcess = require('./processTableauCsv')
+const tableauFilter = require('./filterTableauCsv')
 const spacesProcess = require('./processSpacesCsv')
 const keywordsProcess = require('./processKeywordsCsv')
 const tutsPostsProcess = require('./processTutsPostsCsv')
@@ -97,6 +99,13 @@ app.get('/api/trello', async function (req, res) {
 	res.send(cards)
 })
 
+//return tableau board data
+app.get('/api/trello', async function (req, res) {
+	const dataFileStream = fs.createReadStream(TRELLO_DATABASE)
+	const cards = await csvIngest(dataFileStream, (row)=>tableauProcess(tableauFilter(row)), [])
+	res.send(cards)
+})
+
 
 //should have app.post for trello csv
 
@@ -105,6 +114,23 @@ app.post('/api/trello', upload.none(), async function (req, res) {
 	try {
 		await promisify(fs.writeFile)(TRELLO_DATABASE, newCsv)
 		console.log(`Updated ${TRELLO_DATABASE}`)
+		res.sendStatus(200)	
+	}
+	catch (ex) {
+		console.log("Exception writing CSV file: ", ex)
+		res.sendStatus(500)
+	}
+})
+
+
+app.post('/api/tableau', upload.none(), async function (req, res) {
+	const newCsv = req.body.tableauCsv
+
+	//could filter new tableau CSV here instead of waiting until load
+
+	try {
+		await promisify(fs.writeFile)(TABLEAU_DATABASE, newCsv)
+		console.log(`Updated ${TABLEAU_DATABASE}`)
 		res.sendStatus(200)	
 	}
 	catch (ex) {
@@ -133,4 +159,4 @@ async function launch() {
 	app.listen(port, () => console.log(`API app listening on port ${port}!`))
 }
 
-launch()
+launch()tableau
