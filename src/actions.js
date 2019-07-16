@@ -16,11 +16,14 @@ const cardActions = dataActions('card', 'cards')
 const spaceActions = dataActions('space', 'spaces')
 const keywordActions = dataActions('keyword', 'keywords')
 const postActions = dataActions('post', 'posts')
+const tableauActions = dataActions('tableauItem', 'tableauItems')
+
 
 const cardLoadingActions = loadingActions('cards')
 const spaceLoadingActions = loadingActions('spaces')
 const keywordLoadingActions = loadingActions('keywords')
 const postLoadingActions = loadingActions('posts')
+const tableauLoadingActions = loadingActions('tableau')
 
 function loadTrelloCsv(csv) {
     var formData  = new FormData();
@@ -35,6 +38,21 @@ function loadTrelloCsv(csv) {
         dispatch(startLoadingCards())    
     }
 }
+
+function loadTableauCsv(csv) {
+    var formData  = new FormData();
+    formData.append("tableauCsv", csv)
+
+    return async function (dispatch, getState) {
+        await fetch('/api/tableau', {
+            method: 'POST',
+            body: formData
+        })
+    
+        dispatch(startLoadingTableau())    
+    }
+}
+
 /*    return async function (dispatch, getState) {
  
         dispatch(cardActions.clearCards())
@@ -53,8 +71,6 @@ function loadTrelloCsv(csv) {
 */
 
 const startLoadingSpaces = () => {
-    console.log(spaceLoadingActions)
-    console.log(spaceActions)
     let getQueryString = (getState) => "/api/spaces"
 
     let transformloaded = undefined
@@ -110,6 +126,21 @@ const startLoadingKeywords = () => {
     })
 }
 
+const startLoadingTableau = () => {
+    let getQueryString = (getState) => "/api/tableau"
+
+    let transformloaded = undefined
+
+    return startLoading(getQueryString, transformloaded, {
+        add:tableauActions.addTableauItems, 
+        errorLoading:tableauLoadingActions.errorLoadingTableau, 
+        loading:tableauLoadingActions.loadingTableau, 
+        doneLoading: tableauLoadingActions.doneLoadingTableau, 
+        clear: tableauActions.clearTableauItems
+    })
+}
+
+
 const startLoading = (getQueryString, transformLoaded=undefined, {add, errorLoading, loading, doneLoading, clear}) => {
 
     return function (dispatch, getState) {
@@ -150,5 +181,6 @@ export default Object.assign({},
     cardActions, cardLoadingActions, 
     spaceActions, spaceLoadingActions, 
     keywordActions, keywordLoadingActions,
-    {loadTrelloCsv, startLoadingKeywords, startLoadingPosts, startLoadingSpaces, startLoadingCards}
+    tableauActions, tableauLoadingActions,
+    {loadTrelloCsv, loadTableauCsv, startLoadingKeywords, startLoadingPosts, startLoadingSpaces, startLoadingCards, startLoadingTableau}
 )

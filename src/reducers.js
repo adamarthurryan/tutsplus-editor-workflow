@@ -40,11 +40,14 @@ export const keywords = data('keyword', 'keywords')
 
 export const posts = data('post', 'posts')
 
+export const tableauItems = data('tableauItem', 'tableauItems')
+
 
 export const cardsLoader = loader('cards') 
 export const spacesLoader = loader('spaces') 
 export const keywordsLoader = loader('keywords') 
 export const postsLoader = loader('posts')
+export const tableauLoader = loader('tableau')
 
 export const STATE_EMPTY = "empty"
 export const STATE_LOADING = "loading"

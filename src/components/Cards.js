@@ -15,9 +15,9 @@ import reactTableSubstringFilter from '../util/reactTableSubstringFilter'
 const TreeTable = treeTableHOC(ReactTable);
 
 
-const mapStateToProps = state => 
+const mapStateToProps = state =>  
   Object.assign(
-    {cards: state.cards, spaces: state.spaces, keywords: state.keywords, posts: state.posts} 
+    {cards: state.cards, spaces: state.spaces, keywords: state.keywords, posts: state.posts, tableauItems: state.tableauItems} 
   )
 
 const mapDispatchToProps = dispatch => ({
@@ -30,9 +30,10 @@ class Cards extends PureComponent {
         //this is not the right place to do data processing?
 
 		const columns=[
-			{Header: "Space", accessor:"contentSpace", filterMethod: reactTableSubstringFilter
-//				Cell: (props) => <Link to={`spaces/${slug(props.value.toLowerCase())}`}>{props.value}</Link>
+			{Header: "Space", accessor:"space" , minWidth: 150, filterMethod: reactTableSubstringFilter,
+				Cell: (props) => props.value ? <Link to={`spaces/${slug(props.value.toLowerCase())}`}>{props.value}</Link> : ""
 			},
+
             {Header: "Title", accessor:"title", minWidth:250, filterMethod: reactTableSubstringFilter},
             {Header: "Status", accessor:"list", filterMethod: reactTableSubstringFilter 
 //            	Filter: (props) => ...
@@ -43,7 +44,7 @@ class Cards extends PureComponent {
             {Header: "Is Update?", id:"isUpdate", accessor:(data => data.isUpdate ? "yes" :"" )}
 		]
 
-		const database = createSpacesDatabase(this.props.cards, this.props.spaces, this.props.keywords, this.props.posts)
+		const database = createSpacesDatabase(this.props.cards, this.props.spaces, this.props.keywords, this.props.posts, this.props.tableauItems)
 		//const spacesByCategory=groupBy(Object.values(database.spaces), "category")
 		
         return <TreeTable
@@ -51,7 +52,8 @@ class Cards extends PureComponent {
 			columns={columns}
 			filterable
 			resizable={false}
-/*			pivotBy={["contentSpace"]}*/
+			defaultPageSize={database.cards.length+1}
+/*			pivotBy={["space"]}*/
 			expanded={Array.from("01234567890123456789").map(() => true)}
 			/>
 		

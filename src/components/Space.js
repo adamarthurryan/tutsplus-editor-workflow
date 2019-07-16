@@ -10,7 +10,7 @@ import CopyToClipboard from '@adamarthurryan/react-copy-to-clipboard'
 
 const mapStateToProps = state => 
   Object.assign(
-    {cards: state.cards, spaces: state.spaces, keywords: state.keywords, posts: state.posts} 
+    {cards: state.cards, spaces: state.spaces, keywords: state.keywords, posts: state.posts, tableauItems: state.tableauItems} 
   )
 
 const mapDispatchToProps = dispatch => ({
@@ -20,17 +20,21 @@ class Space extends PureComponent {
 
 
     render() {
-		const database = createSpacesDatabase(this.props.cards, this.props.spaces, this.props.keywords, this.props.posts)
+		const database = createSpacesDatabase(this.props.cards, this.props.spaces, this.props.keywords, this.props.posts, this.props.tableauItems)
 		const spacesBySlug = getSpacesBySlug(database)
 		const slug = this.props.match.params.spaceSlug
 
 		const space = spacesBySlug[slug]
 		
 		const keywords = space
-			? database.keywords.filter(keywordItem => keywordItem.space === space.space)
+			? database.keywords.filter(keywordItem => keywordItem.space === space.space).sort((a,b) => b.vol-a.vol)
 			:null
 
-		console.log(keywords)
+		const posts = keywords 
+			? keywords.flatMap(keywordItem => (keywordItem.posts)).sort((a,b) => (a.date<b.date)-(a.date>b.date))
+			: null					
+
+
 
         return <div>
 			{space
@@ -38,35 +42,54 @@ class Space extends PureComponent {
 					<CopyToClipboard label="Copy for Trello">
 						<div style={{marginTop:"-10000px", position:"absolute"}}>
 							<p>## Related Content:</p>
-							{keywords.map(keywordItem => (
-								keywordItem.posts.map(post => (
-									<div> - [{post.title}]({post.url})<br/></div>
-								))
-							))}
+								{posts.map((post, index) => (
+									<div key={index}> - [{post.title}]({post.publishedUrl})<br/></div>
+								))}
 							<p>&nbsp;</p>
 							<p>## Keywords:</p>
-								{keywords.map(keywordItem => (
-									<div> - {keywordItem.keyword} / {keywordItem.vol} / {keywordItem.diff}<br/></div>
+								{keywords.map((keywordItem, index)  => (
+									<div key={index}> - {keywordItem.keyword} / {keywordItem.vol} / {keywordItem.diff}<br/></div>
 								))}
 
 						</div>
 					</CopyToClipboard>
 						<div>
 							<h3>Related Content:</h3>
-							<ul>
-								{keywords.map(keywordItem => (
-									keywordItem.posts.map(post => (
-										<li><a href={post.url} target="_blank" rel="noopener noreferrer">{post.title}</a> {post.publication_date}</li>
-									))
+							<table>
+								<thead>
+									<tr>
+										<th></th><th></th><th>&nbsp;</th><th>Tot. Rev.</th><th>Last Rev</th><th>Tot. Pg.</th><th>Last Pg.</th>
+									</tr>
+								</thead>
+								<tbody>
+								{posts.map((post, index) => (
+									<tr key={index}>
+										<td><a href={post.publishedUrl} target="_blank" rel="noopener noreferrer">{post.title}</a></td>
+										<td>{post.date}</td>
+										<td></td>
+										<td>{post.totalRevenue ? "$"+Math.floor(post.totalRevenue): ""}</td>
+										<td>{post.lastMonthRevenue ? "$"+Math.floor(post.lastMonthRevenue): ""}</td>
+										<td>{post.totalPageviews}</td>
+										<td>{post.lastMonthPageviews}</td>
+									</tr>	
 								))}
-							</ul>
+								</tbody>
+							</table>
+
 							<h3>Keywords:</h3>
 							<table>
-								{keywords.map(keywordItem => (
+								<thead>
 									<tr>
+										<th></th><th>Volume</th><th>Difficulty</th>
+									</tr>
+								</thead>
+								<tbody>
+								{keywords.map((keywordItem, index) => (
+									<tr key={index}>
 										<td>{keywordItem.keyword}</td><td>{keywordItem.vol}</td><td>{keywordItem.diff}</td>
 									</tr>
 								))}
+								</tbody>
 							</table>
 
 						</div>

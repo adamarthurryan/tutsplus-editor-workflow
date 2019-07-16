@@ -14,7 +14,11 @@ const bodyParser = require('body-parser')
 const basicAuth = require('express-basic-auth')
 
 const multer = require('multer')
-let upload = multer()
+let upload = multer(
+	{ limits: {
+		fieldSize: 32*1024*1024 //20 MB
+	} }
+)
 
 const trelloProcess = require('./processTrelloCsv')
 const tableauProcess = require('./processTableauCsv')
@@ -28,6 +32,7 @@ const SPACES_DATABASE="./data/spaces.csv"
 const KEYWORDS_DATABASE="./data/keywords.csv"
 const POSTS_DATABASES=["./data/cm-posts.csv", "./data/other-posts.csv"]
 const TRELLO_DATABASE="./data/trello.csv"
+const TABLEAU_DATABASE="./data/tableau.csv"
 
 const app = express()
 const port = 8080
@@ -100,10 +105,10 @@ app.get('/api/trello', async function (req, res) {
 })
 
 //return tableau board data
-app.get('/api/trello', async function (req, res) {
-	const dataFileStream = fs.createReadStream(TRELLO_DATABASE)
-	const cards = await csvIngest(dataFileStream, (row)=>tableauProcess(tableauFilter(row)), [])
-	res.send(cards)
+app.get('/api/tableau', async function (req, res) {
+	const dataFileStream = fs.createReadStream(TABLEAU_DATABASE)
+	const tableau = await csvIngest(dataFileStream, tableauProcess, [])
+	res.send(tableau)
 })
 
 
@@ -159,4 +164,4 @@ async function launch() {
 	app.listen(port, () => console.log(`API app listening on port ${port}!`))
 }
 
-launch()tableau
+launch()

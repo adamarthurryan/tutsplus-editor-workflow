@@ -8,17 +8,17 @@ const mapStateToProps = state => ({})
 
 //map the relevant actions to this components props
 const mapDispatchToProps = dispatch => ({
-    loadTrelloCsv: csv => dispatch(Actions.loadTrelloCsv(csv)),
+    loadTableauCsv: csv => dispatch(Actions.loadTableauCsv(csv)),
 })
 
-class TrelloCsvUpload extends Component {
+class TableauCsvUpload extends Component {
 
-    trelloFileChange(event) {
+    tableauFileChange(event) {
         const file = event.target.files[0]
 
         const reader = new FileReader()
         reader.onload = e => {
-            this.props.loadTrelloCsv(e.target.result)
+            this.props.loadTableauCsv(e.target.result)
         }
 
         reader.readAsText(file);
@@ -26,12 +26,12 @@ class TrelloCsvUpload extends Component {
 
     render() {
       return (<div className="inline field">
-        <label htmlFor="file_trello_csv" className=""> Import Trello Data</label>
-        <input id="file_trello_csv" type="file" className="ui button" onChange={this.trelloFileChange.bind(this)}/>
+        <label htmlFor="file_tableau_csv" className=""> Import Tableau Data</label>
+        <input id="file_tableau_csv" type="file" className="ui button" onChange={this.tableauFileChange.bind(this)}/>
       </div>)
     }
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(TrelloCsvUpload)
+export default connect(mapStateToProps, mapDispatchToProps)(TableauCsvUpload)
     

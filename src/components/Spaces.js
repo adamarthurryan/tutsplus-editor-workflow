@@ -9,12 +9,15 @@ import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 import treeTableHOC from "react-table/lib/hoc/treeTable";
 
+import reactTableSubstringFilter from '../util/reactTableSubstringFilter'
+
+
 const TreeTable = treeTableHOC(ReactTable);
 
 
 const mapStateToProps = state => 
   Object.assign(
-    {cards: state.cards, spaces: state.spaces, keywords: state.keywords, posts: state.posts} 
+    {cards: state.cards, spaces: state.spaces, keywords: state.keywords, posts: state.posts, tableauItems: state.tableauItems} 
   )
 
 const mapDispatchToProps = dispatch => ({
@@ -27,14 +30,14 @@ class Spaces extends PureComponent {
         //this is not the right place to do data processing?
 
 		const columns=[
-			{Header: "Category", accessor:"category", minWidth: 150},
-			{Header: "Space", accessor:"space", minWidth: 150,
+			{Header: "Category", accessor:"category", minWidth: 150, filterMethod: reactTableSubstringFilter},
+			{Header: "Space", accessor:"space", minWidth: 150, filterMethod: reactTableSubstringFilter,
 				Cell: (props) => <Link to={`spaces/${slug(props.value.toLowerCase())}`}>{props.value}</Link>
 			},
-			{Header: "Approach", accessor:"approach"}
+			{Header: "Approach", accessor:"approach", minWidth: 300, filterMethod: reactTableSubstringFilter}
 		]
 
-		const database = createSpacesDatabase(this.props.cards, this.props.spaces, this.props.keywords, this.props.posts)
+		const database = createSpacesDatabase(this.props.cards, this.props.spaces, this.props.keywords, this.props.posts, this.props.tableauItems)
 		//const spacesByCategory=groupBy(Object.values(database.spaces), "category")
 		
         return <TreeTable
@@ -43,6 +46,7 @@ class Spaces extends PureComponent {
 			filterable
 			resizable={false}
 			pivotBy={["category"]}
+//			defaultPageSize={database.spaces.length+1}
 			expanded={Array.from("01234567890123456789").map(() => true)}
 			/>
 		

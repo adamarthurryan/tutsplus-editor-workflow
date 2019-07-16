@@ -1,60 +1,56 @@
 
-import React, { PureComponent } from 'react';
-import {connect} from 'react-redux'
+import React, { PureComponent } from 'react'
 import {Link} from 'react-router-dom'
-import createSpacesDatabase from '../data/spacesDatabase'
 import slug from 'slug'
 import reactTableSubstringFilter from '../util/reactTableSubstringFilter'
+import {connect} from 'react-redux'
+import createSpacesDatabase from '../data/spacesDatabase'
 
 
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
-import treeTableHOC from "react-table/lib/hoc/treeTable";
-
-const TreeTable = treeTableHOC(ReactTable);
-
 
 const mapStateToProps = state => 
   Object.assign(
-    {cards: state.cards, spaces: state.spaces, keywords: state.keywords, posts: state.posts} 
+    {cards: state.cards, spaces: state.spaces, keywords: state.keywords, posts: state.posts, tableauItems: state.tableauItems} 
   )
 
 const mapDispatchToProps = dispatch => ({
 })
 
+
 class Posts extends PureComponent {
 
 
     render() {
-        //this is not the right place to do data processing?
-	//	const fields = ["space","primary_keyword","format","title","publication_date","author","url","primary_topic","primary_category","teaser","market_links"]
 
+		const database = createSpacesDatabase(this.props.cards, this.props.spaces, this.props.keywords, this.props.posts, this.props.tableauItems)
 
 		const columns=[
-			{Header: "Space", accessor:"space" , filterMethod: reactTableSubstringFilter
-//				Cell: (props) => <Link to={`spaces/${slug(props.value.toLowerCase())}`}>{props.value}</Link>
+			{Header: "Space", accessor:"space" , minWidth: 150, filterMethod: reactTableSubstringFilter,
+				Cell: (props) => props.value ? <Link to={`spaces/${slug(props.value.toLowerCase())}`}>{props.value}</Link> : ""
 			},
-            {Header: "Title", accessor:"title", minWidth:250, filterMethod: reactTableSubstringFilter},
-            {Header: "URL", accessor:"url", minWidth:50},
+            {Header: "Title", accessor:"title", minWidth:400, filterMethod: reactTableSubstringFilter,
+        				Cell: (props) => <a target="_" href={props.original.publishedUrl}>{props.value}</a>
+			},
         	{Header: "Author", accessor:"author", filterMethod: reactTableSubstringFilter},
-            {Header: "Pub Date", accessor:"publication_date"},
-            {Header: "Is Update?", id:'is_update', accessor:(data => data.is_update ? "yes" :"" )}
-
+            {Header: "Pub Date", accessor:"date"},
+            {Header: "Is Up?", minWidth:50, id:'isUpdate', accessor:(data => data.isUpdate ? "yes" :"" )},
+            {Header: "Tot. Rev.", minWidth:60, id:'totalRevenue', accessor:(data=> data.totalRevenue ? Math.floor(data.totalRevenue): "")},
+            {Header: "Last Rev.", minWidth:60, id:'lastMonthRevenue', accessor:(data=> data.lastMonthRevenue ? Math.floor(data.lastMonthRevenue): "")},
+            {Header: "Tot. Pg.", minWidth:60, accessor:"totalPageviews"},
+            {Header: "Last Pg.", minWidth:60, accessor:"lastMonthPageviews"},
 		]
 
-		const database = createSpacesDatabase(this.props.cards, this.props.spaces, this.props.keywords, this.props.posts)
-		//const spacesByCategory=groupBy(Object.values(database.spaces), "category")
-		
-		console.log(database.posts)
 
 		const sortBy = (items, key) => items.sort((a,b) => a[key] ? a[key].localeCompare(b[key]) : b[key] ? -1: 0) 
 
-        return <TreeTable
+        return <ReactTable
 			data={sortBy(database.posts, "space")}
 			columns={columns}
+			defaultPageSize={database.posts.length+1}
 			filterable
 			resizable={false}
-//			pivotBy={["space"]}
 			/*expanded={Array.from("01234567890123456789").map(() => true)}*/
 			/>
 		

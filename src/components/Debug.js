@@ -25,7 +25,7 @@ class Debug extends Component {
               <tr>
                 <td>{card.title}</td>
                 <td>{card.list}</td>
-                <td>{card.contentSpace}</td>
+                <td>{card.space}</td>
                 <td>{card.date}</td>
               </tr>
             ))}

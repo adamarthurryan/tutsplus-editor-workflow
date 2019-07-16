@@ -1,7 +1,6 @@
 
 import React, { PureComponent } from 'react';
 import {connect} from 'react-redux'
-import * as Actions from '../actions'
 import groupBy from 'lodash.groupby'
 import memoizeOne from 'memoize-one'
 import createSpacesDatabase from '../data/spacesDatabase'
@@ -11,7 +10,7 @@ import CopyToClipboard from '@adamarthurryan/react-copy-to-clipboard'
 
 const mapStateToProps = state => 
   Object.assign(
-    {cards: state.cards, spaces: state.spaces, keywords: state.keywords, posts: state.posts} 
+    {cards: state.cards, spaces: state.spaces, keywords: state.keywords, posts: state.posts, tableauItems: state.tableauItems} 
   )
 
 const mapDispatchToProps = dispatch => ({
@@ -23,7 +22,7 @@ class SpacesDashboard extends PureComponent {
     render() {
         //this is not the right place to do data processing?
 
-		const database = createSpacesDatabase(this.props.cards, this.props.spaces, this.props.keywords, this.props.posts)
+		const database = createSpacesDatabase(this.props.cards, this.props.spaces, this.props.keywords, this.props.posts, this.props.tableauItems)
         let rows = createRows(database.spaces, database.keywords)
 
         return <CopyToClipboard>
@@ -54,7 +53,6 @@ function createRowsInternal(spaces, keywords) {
 	const spacesByCategory=groupBy(Object.values(spaces), "category")
 	const keywordsBySpaces=groupBy(keywords, "space")
 
-	console.log(spacesByCategory)
 
 	let rows = []
 	Object.keys(spacesByCategory).forEach(category=> {
@@ -110,11 +108,13 @@ function formatKeywordForSpacesDashboard(keywordItem, card=null, post=null) {
 	}
 	else if (post) {
 //		console.log("post", post)
-		row = Object.assign({}, row, {"Existing": post.url, "Title":post.title, "Format":post.format, "Date Updated":post.publication_date, "Progress":"Scheduled"})
+		row = Object.assign({}, row, {"Existing": post.publishedUrl, "Title":post.title, "Format":post.postType, "Date Updated":post.date, "Progress":"Scheduled"})
 	}
 	return row
 }
 
+/*
 function formatPostForSpacesDashboard(post) {
-	return Object.assign({}, EMPTY_ROW, {"Keyword":post.primary_keyword, "Existing": post.url, "Title":post.title, "Format":post.format, "Date Updated":post.publication_date, "Progress":"Scheduled"})
+	return Object.assign({}, EMPTY_ROW, {"Keyword":post.primaryKeyword, "Existing": post.publishedUrl, "Title":post.title, "Format":post.postType, "Date Updated":post.date, "Progress":"Scheduled"})
 }
+*/

@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import './App.css'
 
 import TrelloCsvUpload from './components/TrelloCsvUpload'
+import TableauCsvUpload from './components/TableauCsvUpload'
 import Debug from './components/Debug'
 
 import EditorialCalendar from './components/EditorialCalendar'
@@ -26,7 +27,9 @@ class App extends Component {
               <div className="fields">
                 <TrelloCsvUpload/>
               </div>
-
+              <div className="fields">
+                <TableauCsvUpload/>
+              </div>
               {/*<LoadingState/>*/}
           </div>
 

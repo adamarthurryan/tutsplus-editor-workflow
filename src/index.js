@@ -45,7 +45,8 @@ const mapDispatchToProps = (dispatch) => ({
   startLoadingCards: () => dispatch(Actions.startLoadingCards()),
   startLoadingPosts: () => dispatch(Actions.startLoadingPosts()),
   startLoadingSpaces: () => dispatch(Actions.startLoadingSpaces()),
-  startLoadingKeywords: () => dispatch(Actions.startLoadingKeywords())
+  startLoadingKeywords: () => dispatch(Actions.startLoadingKeywords()),
+  startLoadingTableau: () => dispatch(Actions.startLoadingTableau())
 })
 
 class Root extends Component {
@@ -54,6 +55,7 @@ class Root extends Component {
     this.props.startLoadingCards()
     this.props.startLoadingSpaces()
     this.props.startLoadingKeywords()
+    this.props.startLoadingTableau()
   }
 
   render() {

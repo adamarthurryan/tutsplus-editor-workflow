@@ -76,6 +76,6 @@ const ED_CAL_LISTS = [
 
     const processCards = memoizeOne(processCardsInternal)
     
-    function formatForEdCal({list, title, date, authors, labels, contentSpace}) {
-        return {date, day:"", goal:"", title, authors:authors, rate_code:"", rate_cm:"", rate_sponsored:"", status:list, content_strategy:contentSpace, invoice:labels.includes(LABEL_PAID_IN_ADVANCE)?"Approved in Advance": ""}
+    function formatForEdCal({list, title, date, authors, labels, space}) {
+        return {date, day:"", goal:"", title, authors:authors, rate_code:"", rate_cm:"", rate_sponsored:"", status:list, content_strategy:space, invoice:labels.includes(LABEL_PAID_IN_ADVANCE)?"Approved in Advance": ""}
     }

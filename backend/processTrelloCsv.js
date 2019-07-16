@@ -14,7 +14,7 @@ module.exports = function processRow (row, cards)  {
 
 	let publishedUrl = row['Published URL']
 	let cmsUrl = row['CMS URL']
-	let contentSpace = row['Content Space']	
+	let space = row['Content Space']	
 	let primaryKeyword = row['Primary Keyword']
 	let postType = row['Type']
 	let isUpdate = row['Update?']
@@ -37,7 +37,7 @@ module.exports = function processRow (row, cards)  {
 	else
 		date = ""
 
-	let card = {cardUrl, list, title, date, authors, labels, isArchived, cmsUrl, publishedUrl, contentSpace, primaryKeyword, postType, isUpdate}
+	let card = {cardUrl, list, title, date, authors, labels, isArchived, cmsUrl, publishedUrl, space, primaryKeyword, postType, isUpdate}
 
 	cards.push(card)
 }
