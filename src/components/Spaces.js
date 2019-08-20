@@ -30,11 +30,15 @@ class Spaces extends PureComponent {
         //this is not the right place to do data processing?
 
 		const columns=[
-			{Header: "Category", accessor:"category", minWidth: 150, filterMethod: reactTableSubstringFilter},
+//			{Header: "Category", accessor:"category", minWidth: 150, filterMethod: reactTableSubstringFilter},
 			{Header: "Space", accessor:"space", minWidth: 150, filterMethod: reactTableSubstringFilter,
 				Cell: (props) => <Link to={`spaces/${slug(props.value.toLowerCase())}`}>{props.value}</Link>
 			},
-			{Header: "Approach", accessor:"approach", minWidth: 300, filterMethod: reactTableSubstringFilter}
+			{Header: "Approach", accessor:"approach", minWidth: 300, filterMethod: reactTableSubstringFilter},
+            {Header: "Tot. Rev.", minWidth:60, id:'totalRevenue', accessor:(data=> data.totalRevenue ? Math.floor(data.totalRevenue): "")},
+            {Header: "Last Rev.", minWidth:60, id:'lastMonthRevenue', accessor:(data=> data.lastMonthRevenue ? Math.floor(data.lastMonthRevenue): "")},
+            {Header: "Tot. Pg.", minWidth:60, accessor:"totalPageviews"},
+            {Header: "Last Pg.", minWidth:60, accessor:"lastMonthPageviews"},
 		]
 
 		const database = createSpacesDatabase(this.props.cards, this.props.spaces, this.props.keywords, this.props.posts, this.props.tableauItems)
@@ -45,9 +49,9 @@ class Spaces extends PureComponent {
 			columns={columns}
 			filterable
 			resizable={false}
-			pivotBy={["category"]}
+//			pivotBy={["category"]}
 //			defaultPageSize={database.spaces.length+1}
-			expanded={Array.from("01234567890123456789").map(() => true)}
+//			expanded={Array.from("01234567890123456789").map(() => true)}
 			/>
 		
 		/*<div>

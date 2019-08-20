@@ -10,6 +10,7 @@ module.exports = function processRow (row, tableau)  {
 	let pageviews = row['Pageviews']
 	let revenue = row['Revenue']
 	let date = row['Published At']
+	let author = row['author_name']
 
 	if (date && date !== "null")
 		date = dateFormat(Date.parse(date), "yyyy-mm-dd")
@@ -33,7 +34,7 @@ module.exports = function processRow (row, tableau)  {
 
 
 
-	let tableauItem = {title, space, publishedUrl, statsMonth, pageviews, revenue, date}
+	let tableauItem = {title, author, space, publishedUrl, statsMonth, pageviews, revenue, date}
 
 	tableau.push(tableauItem)
 }

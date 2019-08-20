@@ -25,6 +25,8 @@ function createSpacesDatabase (cards, spaces, keywords, posts, tableau) {
 
 	posts = tableauPosts
 
+	spaces = aggregateStats(spaces, posts)
+
     cards = processCards(cards)
 
 	const cardsBySpaces = groupBy(cards, "space")
@@ -242,7 +244,7 @@ function processTableauStats (tableau) {
 	//post urls -> post data
 	let posts = {}
 
-	const newStats = item => ({publishedUrl: item.publishedUrl, title: item.title, date: item.date, space: item.space, stats: [
+	const newStats = item => ({publishedUrl: item.publishedUrl, author:item.author, title: item.title, date: item.date, space: item.space, stats: [
 			{statsMonth: item.statsMonth, pageviews: item.pageviews, revenue: item.revenue}
 		]})
 
@@ -275,6 +277,23 @@ function processTableauStats (tableau) {
 
 
 	return posts
+}
+
+function aggregateStats (spaces, posts) {
+	const postsBySpace = groupBy(posts, "space")
+
+	return spaces.map (space => {
+		if (postsBySpace[space.space]) {
+			const stats = postsBySpace[space.space].reduce(({totalRevenue, lastMonthRevenue, totalPageviews, lastMonthPageviews}, post) => ({
+					totalRevenue:totalRevenue+post.totalRevenue, 
+					lastMonthRevenue:lastMonthRevenue+post.lastMonthRevenue, 
+					totalPageviews:totalPageviews+post.totalPageviews,
+					lastMonthPageviews:lastMonthPageviews+post.lastMonthPageviews 
+				}), {totalRevenue:0, totalPageviews:0, lastMonthRevenue:0, lastMonthPageviews:0})
+			return Object.assign({}, space, stats)
+		}
+		else return Object.assign({}, space)
+	} )
 }
 
 const cmsPart = url => {

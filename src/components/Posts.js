@@ -33,7 +33,11 @@ class Posts extends PureComponent {
             {Header: "Title", accessor:"title", minWidth:400, filterMethod: reactTableSubstringFilter,
         				Cell: (props) => <a target="_" href={props.original.publishedUrl}>{props.value}</a>
 			},
+            {Header: "Edit", accessor:"edit", minWidth:20,
+        				Cell: (props) => <a target="_" href={editUrl(props.original.publishedUrl)}>→</a>
+			},
         	{Header: "Author", accessor:"author", filterMethod: reactTableSubstringFilter},
+        	{Header: "Format", accessor:"format", filterMethod: reactTableSubstringFilter},
             {Header: "Pub Date", accessor:"date"},
             {Header: "Is Up?", minWidth:50, id:'isUpdate', accessor:(data => data.isUpdate ? "yes" :"" )},
             {Header: "Tot. Rev.", minWidth:60, id:'totalRevenue', accessor:(data=> data.totalRevenue ? Math.floor(data.totalRevenue): "")},
@@ -55,6 +59,16 @@ class Posts extends PureComponent {
 			/>
 		
     }
+}
+
+const editUrl = url => {
+
+	if (! url) return null
+
+	const search = url.match(/cms-(\d+)/)
+	if (!search) return null
+
+	return `https://tutsplus.io/tutorials/${search[1]}/edit`
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Posts)
